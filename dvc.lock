@@ -1,0 +1,78 @@
+schema: '2.0'
+stages:
+  data_ingestion:
+    cmd: python src/data/data_ingestion.py
+    deps:
+    - path: src/data/data_ingestion.py
+      hash: md5
+      md5: fe0b5dac4d8f5e43c491247beebdcdc6
+      size: 3515
+    params:
+      params.yaml:
+        data_ingestion.test_size: 0.25
+    outs:
+    - path: data/raw
+      hash: md5
+      md5: 00ab6eb22b8f0c41e71ba339f7b465cb.dir
+      size: 364266
+      nfiles: 2
+  data_preprocessing:
+    cmd: python src/features/data_preprocessing.py
+    deps:
+    - path: data/raw
+      hash: md5
+      md5: 00ab6eb22b8f0c41e71ba339f7b465cb.dir
+      size: 364266
+      nfiles: 2
+    - path: src/features/data_preprocessing.py
+      hash: md5
+      md5: 5fd835f373fca8336090e373bedb9be5
+      size: 4301
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 33722688f03774d6c268d7fe1398f336.dir
+      size: 783241
+      nfiles: 2
+  model_building:
+    cmd: python src/models/model_building.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 33722688f03774d6c268d7fe1398f336.dir
+      size: 783241
+      nfiles: 2
+    - path: src/models/model_building.py
+      hash: md5
+      md5: 086d0ae4a76db52e24f77f6f609b2f3f
+      size: 2862
+    params:
+      params.yaml:
+        model_building.n_estimators: 40
+        model_building.random_state: 0
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 182bc911c9f8f3d615eea8f9f4b22812
+      size: 824859
+  model_evaluation:
+    cmd: python src/models/model_evaluation.py
+    deps:
+    - path: data/processed
+      hash: md5
+      md5: 33722688f03774d6c268d7fe1398f336.dir
+      size: 783241
+      nfiles: 2
+    - path: models/model.pkl
+      hash: md5
+      md5: 182bc911c9f8f3d615eea8f9f4b22812
+      size: 824859
+    - path: src/models/model_evaluation.py
+      hash: md5
+      md5: aa7928d8941ba165646fb0a7f2ffe7e5
+      size: 2923
+    outs:
+    - path: reports/metrics.json
+      hash: md5
+      md5: e03c97f0617ec695e836809d3a578314
+      size: 116
