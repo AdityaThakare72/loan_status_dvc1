@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 import os
 import logging
 
@@ -48,7 +48,7 @@ def preprocess_data(train_data, test_data):
         logging.info("Aligned test data columns with train data.")
 
         # Scaling
-        scaler = MinMaxScaler()
+        scaler = StandardScaler()
         X_train_scaled = scaler.fit_transform(X_train_encoded)
         X_test_scaled = scaler.transform(X_test_encoded)
         logging.info("Applied MinMax scaling to numerical features.")
